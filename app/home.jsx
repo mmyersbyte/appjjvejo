@@ -190,7 +190,7 @@ export default function Home({ onLogout }) {
         <View style={styles.perfilContainer}>
           <Image
             source={{
-              uri: 'https://i.pinimg.com/736x/57/ca/8f/57ca8fc8ed53388ae9032a4df7f06234.jpg',
+              uri: 'https://i.pinimg.com/736x/a6/16/28/a6162845747ab6f081706e9a00552a13.jpg',
             }}
             style={styles.imagemPerfil}
           />
