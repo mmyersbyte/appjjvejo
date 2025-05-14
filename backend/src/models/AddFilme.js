@@ -19,6 +19,11 @@ const AddFilmeSchema = new mongoose.Schema(
       required: false,
       maxlength: 144,
     },
+    usuario: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   { timestamps: true }
 );

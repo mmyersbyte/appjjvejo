@@ -1,4 +1,8 @@
+import jwt from 'jsonwebtoken';
 import AddFilme from '../models/AddFilme.js';
+
+// Chave secreta para verificar o JWT (deve ser a mesma usada no authController)
+const JWT_SECRET = process.env.JWT_SECRET || 'chave_blablabla';
 
 // Função para extrair o corpo da requisição em uma API HTTP sem frameworks
 const extrairCorpo = (req) => {
@@ -25,12 +29,53 @@ const extrairCorpo = (req) => {
 };
 
 /**
+ * Função para extrair o ID do usuário a partir do token JWT
+ * @param {Object} req - Objeto de requisição HTTP
+ * @returns {String} ID do usuário ou null se não autenticado
+ */
+const extrairUsuarioId = (req) => {
+  try {
+    // Verificar se há token de autorização
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return null;
+    }
+
+    // Formato esperado: "Bearer <token>"
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return null;
+    }
+
+    // Verificar e decodificar o token
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded.id; // ID do usuário está no payload do token
+  } catch (error) {
+    console.error('Erro ao extrair ID do usuário:', error);
+    return null;
+  }
+};
+
+/**
  * Função para cadastrar um novo filme
  * @param {Object} req - Objeto de requisição HTTP
  * @param {Object} res - Objeto de resposta HTTP
  */
 export async function cadastrarFilme(req, res) {
   try {
+    // Extrair o ID do usuário do token
+    const usuarioId = extrairUsuarioId(req);
+    if (!usuarioId) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Usuário não autenticado',
+        })
+      );
+      return;
+    }
+
     // Extrair dados do corpo da requisição
     const dadosFilme = await extrairCorpo(req);
 
@@ -46,12 +91,13 @@ export async function cadastrarFilme(req, res) {
       return;
     }
 
-    // Criar um novo filme
+    // Criar um novo filme associado ao usuário atual
     const novoFilme = new AddFilme({
       nomeFilme: dadosFilme.nomeFilme,
       imagemFilme: dadosFilme.imagemFilme || '',
       dataAssistir: dadosFilme.dataAssistir || null,
       descricao: dadosFilme.descricao || '',
+      usuario: usuarioId, // Associar ao usuário atual
     });
 
     // Salvar o filme no banco de dados
@@ -79,14 +125,27 @@ export async function cadastrarFilme(req, res) {
 }
 
 /**
- * Função para obter todos os filmes cadastrados
+ * Função para obter todos os filmes cadastrados do usuário atual
  * @param {Object} req - Objeto de requisição HTTP
  * @param {Object} res - Objeto de resposta HTTP
  */
 export async function getFilmes(req, res) {
   try {
-    // Buscar todos os filmes no banco de dados
-    const filmes = await AddFilme.find();
+    // Extrair o ID do usuário do token
+    const usuarioId = extrairUsuarioId(req);
+    if (!usuarioId) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Usuário não autenticado',
+        })
+      );
+      return;
+    }
+
+    // Buscar apenas os filmes associados ao usuário atual
+    const filmes = await AddFilme.find({ usuario: usuarioId });
 
     // Retornar a lista de filmes
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -117,6 +176,19 @@ export async function getFilmes(req, res) {
  */
 export async function deleteFilme(req, res, id) {
   try {
+    // Extrair o ID do usuário do token
+    const usuarioId = extrairUsuarioId(req);
+    if (!usuarioId) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Usuário não autenticado',
+        })
+      );
+      return;
+    }
+
     // Verificar se o ID foi fornecido
     if (!id) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -129,11 +201,11 @@ export async function deleteFilme(req, res, id) {
       return;
     }
 
-    // Buscar e deletar o filme pelo ID
-    const filmeRemovido = await AddFilme.findByIdAndDelete(id);
+    // Buscar o filme para verificar se pertence ao usuário atual
+    const filme = await AddFilme.findById(id);
 
-    // Verificar se o filme foi encontrado
-    if (!filmeRemovido) {
+    // Verificar se o filme existe
+    if (!filme) {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(
         JSON.stringify({
@@ -143,6 +215,21 @@ export async function deleteFilme(req, res, id) {
       );
       return;
     }
+
+    // Verificar se o filme pertence ao usuário atual
+    if (filme.usuario.toString() !== usuarioId) {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Você não tem permissão para excluir este filme',
+        })
+      );
+      return;
+    }
+
+    // Deletar o filme
+    await AddFilme.findByIdAndDelete(id);
 
     // Retornar resposta de sucesso
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -172,6 +259,19 @@ export async function deleteFilme(req, res, id) {
  */
 export async function updateFilme(req, res, id) {
   try {
+    // Extrair o ID do usuário do token
+    const usuarioId = extrairUsuarioId(req);
+    if (!usuarioId) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Usuário não autenticado',
+        })
+      );
+      return;
+    }
+
     // Verificar se o ID foi fornecido
     if (!id) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -179,6 +279,33 @@ export async function updateFilme(req, res, id) {
         JSON.stringify({
           erro: true,
           mensagem: 'ID do filme não fornecido',
+        })
+      );
+      return;
+    }
+
+    // Buscar o filme para verificar se pertence ao usuário atual
+    const filme = await AddFilme.findById(id);
+
+    // Verificar se o filme existe
+    if (!filme) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Filme não encontrado',
+        })
+      );
+      return;
+    }
+
+    // Verificar se o filme pertence ao usuário atual
+    if (filme.usuario.toString() !== usuarioId) {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          erro: true,
+          mensagem: 'Você não tem permissão para atualizar este filme',
         })
       );
       return;
@@ -199,24 +326,15 @@ export async function updateFilme(req, res, id) {
       return;
     }
 
-    // Buscar e atualizar o filme
+    // Garantir que o usuário não seja alterado na atualização
+    delete dadosFilme.usuario;
+
+    // Atualizar o filme
     const filmeAtualizado = await AddFilme.findByIdAndUpdate(
       id,
       { $set: dadosFilme },
       { new: true, runValidators: true }
     );
-
-    // Verificar se o filme foi encontrado
-    if (!filmeAtualizado) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(
-        JSON.stringify({
-          erro: true,
-          mensagem: 'Filme não encontrado',
-        })
-      );
-      return;
-    }
 
     // Retornar resposta de sucesso
     res.writeHead(200, { 'Content-Type': 'application/json' });
