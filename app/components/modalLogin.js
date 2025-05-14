@@ -15,6 +15,7 @@ import {
   View,
 } from 'react-native';
 import estilos from '../estilos/styles'; // Importando as cores globais
+import { login } from '../services/authService'; // Importando o serviço de autenticação
 import estilosLogin from './estilosComponentes/login'; // Importando os estilos específicos do login
 
 /**
@@ -97,25 +98,38 @@ const ModalLogin = ({ visivel, aoFechar, aoLogar }) => {
 
     try {
       setCarregando(true);
-      // Aqui seria implementada a chamada para o backend
-      // await api.post('/login', { email, senha });
 
-      // Simulando uma chamada ao backend
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Chama o serviço de autenticação para fazer login
+      const resultado = await login(email, senha);
 
       // Chama a função de callback passada como prop
       if (aoLogar) {
-        aoLogar({ email });
+        aoLogar(resultado.usuario);
       }
 
       // Limpa os campos e fecha o modal
       limparCampos();
       aoFechar();
     } catch (erro) {
-      setErros({
-        ...erros,
-        geral: 'Erro ao realizar login. Verifique suas credenciais.',
-      });
+      // Tratamento de erros específicos da API
+      if (erro.response) {
+        // Erro retornado pelo servidor
+        const mensagemErro =
+          erro.response.data && erro.response.data.mensagem
+            ? erro.response.data.mensagem
+            : 'Erro ao realizar login. Verifique suas credenciais.';
+
+        setErros({
+          ...erros,
+          geral: mensagemErro,
+        });
+      } else {
+        // Erro de rede ou outro
+        setErros({
+          ...erros,
+          geral: 'Falha na conexão. Verifique sua internet e tente novamente.',
+        });
+      }
       console.error('Erro no login:', erro);
     } finally {
       setCarregando(false);

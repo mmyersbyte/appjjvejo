@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-// Chave secreta para assinar o JWT - em um ambiente de produção, deve estar no .env
-const JWT_SECRET = process.env.JWT_SECRET || 'sua_chave_secreta_temporaria';
+// Chave secreta para assinar o JWT
+const JWT_SECRET = process.env.JWT_SECRET || 'chave_blablabla';
 
 // Função para extrair o corpo da requisição em uma API HTTP sem frameworks
 const extrairCorpo = (req) => {
@@ -66,7 +66,6 @@ export async function registrarUsuario(req, res) {
       senha: dadosUsuario.senha, // Senha será hasheada pelo middleware no modelo
     });
 
-    // Salvar o usuário no banco de dados
     await novoUsuario.save();
 
     // Gerar token JWT

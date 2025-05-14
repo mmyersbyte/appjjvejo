@@ -15,6 +15,7 @@ import {
   View,
 } from 'react-native';
 import estilos from '../estilos/styles'; // Importando as cores globais
+import { registrar } from '../services/authService'; // Importando o serviço de autenticação
 import estilosCadastro from './estilosComponentes/cadastro'; // Importando os estilos específicos do cadastro
 
 /**
@@ -130,25 +131,46 @@ const ModalCadastro = ({ visivel, aoFechar, aoCadastrar }) => {
 
     try {
       setCarregando(true);
-      // Aqui seria implementada a chamada para o backend
-      // await api.post('/usuarios', { nome, email, senha });
 
-      // Simulando uma chamada ao backend
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Chama o serviço de autenticação para registrar usuário
+      const resultado = await registrar(nome, email, senha);
 
       // Chama a função de callback passada como prop
       if (aoCadastrar) {
-        aoCadastrar({ nome, email });
+        aoCadastrar(resultado.usuario);
       }
 
       // Limpa os campos e fecha o modal
       limparCampos();
       aoFechar();
     } catch (erro) {
-      setErros({
-        ...erros,
-        geral: 'Erro ao realizar cadastro. Tente novamente.',
-      });
+      // Tratamento de erros específicos da API
+      if (erro.response) {
+        // Erro retornado pelo servidor
+        const mensagemErro =
+          erro.response.data && erro.response.data.mensagem
+            ? erro.response.data.mensagem
+            : 'Erro ao realizar cadastro. Tente novamente.';
+
+        // Verificar se é erro de email já cadastrado
+        if (erro.response.status === 409) {
+          setErros({
+            ...erros,
+            email: 'Este email já está cadastrado',
+          });
+        } else {
+          setErros({
+            ...erros,
+            geral: mensagemErro,
+          });
+        }
+      } else {
+        // Erro de rede ou outro
+        setErros({
+          ...erros,
+          geral: 'Falha na conexão. Verifique sua internet e tente novamente.',
+        });
+      }
       console.error('Erro no cadastro:', erro);
     } finally {
       setCarregando(false);

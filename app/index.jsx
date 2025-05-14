@@ -2,16 +2,54 @@
 
 import { FontAwesome } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import ModalCadastro from './components/modalCadastro';
 import ModalLogin from './components/modalLogin';
 import estilos from './estilos/styles';
+import Home from './home';
+import {
+  getUser,
+  initAuth,
+  isAuthenticated,
+  logout,
+} from './services/authService';
 
 export default function Index() {
   // Estados para controlar a visibilidade dos modais
   const [modalLoginVisivel, setModalLoginVisivel] = useState(false);
   const [modalCadastroVisivel, setModalCadastroVisivel] = useState(false);
+
+  // Estados para controlar a autenticação
+  const [autenticado, setAutenticado] = useState(false);
+  const [usuario, setUsuario] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+
+  // Efeito para verificar autenticação ao iniciar
+  useEffect(() => {
+    const verificarAutenticacao = async () => {
+      try {
+        // Inicializa o serviço de autenticação
+        await initAuth();
+
+        // Verifica se o usuário está autenticado
+        const estaAutenticado = await isAuthenticated();
+        setAutenticado(estaAutenticado);
+
+        // Se estiver autenticado, busca os dados do usuário
+        if (estaAutenticado) {
+          const dadosUsuario = await getUser();
+          setUsuario(dadosUsuario);
+        }
+      } catch (erro) {
+        console.error('Erro ao verificar autenticação:', erro);
+      } finally {
+        setCarregando(false);
+      }
+    };
+
+    verificarAutenticacao();
+  }, []);
 
   // Funções para abrir e fechar os modais
   const abrirModalLogin = () => {
@@ -31,16 +69,52 @@ export default function Index() {
   };
 
   // Funções de callback para login e cadastro
-  const aoLogar = (usuario) => {
-    console.log('Usuário logado:', usuario);
-    // Depois vou fazer a lógica para o login veyr
+  const aoLogar = (usuarioLogado) => {
+    setUsuario(usuarioLogado);
+    setAutenticado(true);
+    console.log('Usuário logado:', usuarioLogado);
+    // Redirecionar para a tela principal ou atualizar a interface
   };
 
-  const aoCadastrar = (usuario) => {
-    console.log('Usuário cadastrado:', usuario);
-    // Depois vou fazer a lógica para o cadastro veyr
+  const aoCadastrar = (usuarioCadastrado) => {
+    setUsuario(usuarioCadastrado);
+    setAutenticado(true);
+    console.log('Usuário cadastrado:', usuarioCadastrado);
+    // Redirecionar para a tela principal ou atualizar a interface
   };
 
+  // Função para fazer logout
+  const fazerLogout = async () => {
+    try {
+      await logout();
+      setUsuario(null);
+      setAutenticado(false);
+    } catch (erro) {
+      console.error('Erro ao fazer logout:', erro);
+    }
+  };
+
+  // Renderização condicional baseada no estado de autenticação
+  if (carregando) {
+    return (
+      <View style={estilos.container}>
+        <LottieView
+          source={require('./assets/icon.json')}
+          autoPlay
+          loop
+          style={estilos.animacao}
+        />
+        <Text style={estilos.subtitulo}>Carregando...</Text>
+      </View>
+    );
+  }
+
+  // Se o usuário estiver autenticado, redireciona para a Home
+  if (autenticado && usuario) {
+    return <Home />;
+  }
+
+  // Se não estiver autenticado, mostra a tela de login/cadastro
   return (
     <View style={estilos.container}>
       <Text style={estilos.titulo}>Já Já Vejo!</Text>
