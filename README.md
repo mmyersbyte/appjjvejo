@@ -1,3 +1,24 @@
+<!-- markdownlint-disable MD033 MD041 -->
+<p align="center">
+  <h1 align="center">🎬 Já Já Vejo</h1>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-18.x-green?logo=node.js&logoColor=white&style=for-the-badge" alt="Node.js">
+  <img src="https://img.shields.io/badge/React%20Native-0.72-blue?logo=react&logoColor=white&style=for-the-badge" alt="React Native">
+  <img src="https://img.shields.io/badge/Expo-SDK%2046-purple?logo=expo&logoColor=white&style=for-the-badge" alt="Expo">
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb&logoColor=white&style=for-the-badge" alt="MongoDB Atlas">
+  <img src="https://img.shields.io/badge/Mongoose-6.x-red?logo=mongodb&logoColor=white&style=for-the-badge" alt="Mongoose">
+  <img src="https://img.shields.io/badge/bcrypt-5.x-blue?logo=appveyor&logoColor=white&style=for-the-badge" alt="bcrypt">
+  <img src="https://img.shields.io/badge/Axios-1.x-lightgrey?logo=axios&logoColor=white&style=for-the-badge" alt="Axios">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?logo=github&logoColor=white&style=for-the-badge" alt="License">
+</p>
+<!-- markdownlint-enable MD033 MD041 -->
+
+
+
+
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
