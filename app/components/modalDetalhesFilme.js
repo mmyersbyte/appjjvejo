@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useState } from 'react';
 import {
@@ -129,7 +130,11 @@ const ModalDetalhesFilme = ({
         resultado.assets &&
         resultado.assets.length > 0
       ) {
-        setImagemSelecionada(resultado.assets[0]);
+        // Salvar a imagem permanentemente
+        const imagemPermanente = await salvarImagemPermanente(
+          resultado.assets[0]
+        );
+        setImagemSelecionada(imagemPermanente);
       }
     } catch (erro) {
       console.error('Erro ao selecionar imagem:', erro);
@@ -137,9 +142,66 @@ const ModalDetalhesFilme = ({
     }
   };
 
+  // Função para salvar a imagem em um local permanente
+  const salvarImagemPermanente = async (imagemOriginal) => {
+    try {
+      if (!imagemOriginal?.uri) {
+        return imagemOriginal;
+      }
+
+      // Gerar um nome único para o arquivo
+      const nomeArquivo = `filme_${Date.now()}.jpg`;
+
+      // Caminho para o diretório de documentos (que é persistente entre sessões)
+      const diretorioPermanente = `${FileSystem.documentDirectory}imagens/`;
+
+      // Verificar se o diretório existe e criá-lo se necessário
+      const infoDiretorio = await FileSystem.getInfoAsync(diretorioPermanente);
+      if (!infoDiretorio.exists) {
+        await FileSystem.makeDirectoryAsync(diretorioPermanente, {
+          intermediates: true,
+        });
+      }
+
+      // Caminho completo para salvar a imagem
+      const novoCaminho = `${diretorioPermanente}${nomeArquivo}`;
+
+      // Copiar a imagem do local temporário para o permanente
+      await FileSystem.copyAsync({
+        from: imagemOriginal.uri,
+        to: novoCaminho,
+      });
+
+      // Retornar o objeto com a nova URI permanente
+      return {
+        ...imagemOriginal,
+        uri: novoCaminho,
+      };
+    } catch (erro) {
+      console.error('Erro ao salvar imagem permanentemente:', erro);
+      // Retornar a imagem original se houver algum erro
+      return imagemOriginal;
+    }
+  };
+
   // Função para remover a imagem selecionada
-  const removerImagem = () => {
-    setImagemSelecionada(null);
+  const removerImagem = async () => {
+    try {
+      // Se a imagem foi salva permanentemente, excluir o arquivo
+      if (
+        imagemSelecionada?.uri &&
+        imagemSelecionada.uri.startsWith(FileSystem.documentDirectory)
+      ) {
+        await FileSystem.deleteAsync(imagemSelecionada.uri, {
+          idempotent: true,
+        });
+      }
+
+      setImagemSelecionada(null);
+    } catch (erro) {
+      console.error('Erro ao remover imagem:', erro);
+      setImagemSelecionada(null);
+    }
   };
 
   // Função para validar os campos
@@ -212,6 +274,16 @@ const ModalDetalhesFilme = ({
   const executarExclusao = async () => {
     try {
       setCarregando(true);
+
+      // Se a imagem foi salva permanentemente, excluir o arquivo
+      if (
+        imagemSelecionada?.uri &&
+        imagemSelecionada.uri.startsWith(FileSystem.documentDirectory)
+      ) {
+        await FileSystem.deleteAsync(imagemSelecionada.uri, {
+          idempotent: true,
+        });
+      }
 
       // Chamar a função de callback para deletar o filme
       if (aoDeletar) {
