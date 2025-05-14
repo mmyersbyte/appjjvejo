@@ -40,7 +40,6 @@ const estilosCadastro = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Estilos dos campos
   campoContainer: {
     width: '100%',
     marginBottom: 16,
@@ -61,7 +60,7 @@ const estilosCadastro = StyleSheet.create({
     width: '100%',
     height: 48,
     fontSize: 16,
-    textAlignVertical: 'center', // Centraliza o texto verticalmente
+    textAlignVertical: 'center',
     includeFontPadding: false, // Remove o padding padrão da fonte
     paddingTop: 0, // Remove padding superior
     paddingBottom: 0, // Remove padding inferior
