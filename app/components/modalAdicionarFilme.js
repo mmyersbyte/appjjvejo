@@ -147,7 +147,7 @@ const ModalAdicionarFilme = ({ visivel, aoFechar, aoAdicionar }) => {
     try {
       setCarregando(true);
 
-      // Preparar dados do filme
+      // Preparar dados do filme no formato esperado pela API
       const novoFilme = {
         nome: nomeFilme.trim(),
         imagem:
@@ -313,7 +313,7 @@ const ModalAdicionarFilme = ({ visivel, aoFechar, aoAdicionar }) => {
                 onChangeText={setDescricao}
                 multiline={true}
                 numberOfLines={4}
-                maxLength={500}
+                maxLength={144} // Ajustado para o limite do schema no backend
                 textAlignVertical='top'
               />
             </View>

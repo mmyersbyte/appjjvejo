@@ -1,5 +1,6 @@
 import { URL } from 'node:url';
 import { processarRotasAuth } from './authRoutes.js';
+import { processarRotasFilme } from './filmeRoutes.js';
 
 /**
  * Processa todas as rotas da aplicação
@@ -24,6 +25,10 @@ export default function processarRotas(req, res) {
           endpoints: [
             '/api/auth/registrar - POST - Registrar novo usuário',
             '/api/auth/login - POST - Fazer login',
+            '/api/filmes - GET - Listar todos os filmes',
+            '/api/filmes - POST - Cadastrar novo filme',
+            '/api/filmes/:id - PUT - Atualizar filme',
+            '/api/filmes/:id - DELETE - Remover filme',
           ],
         })
       );
@@ -35,7 +40,12 @@ export default function processarRotas(req, res) {
       return true;
     }
 
-    // Se chegou até aqui, nenhuma rota foi acjada
+    // Verifica se a rota é de filmes
+    if (processarRotasFilme(req, res, urlObj)) {
+      return true;
+    }
+
+    // Se chegou até aqui, nenhuma rota foi encontrada
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(
       JSON.stringify({

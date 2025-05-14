@@ -13,28 +13,13 @@ import {
 import ModalAdicionarFilme from './components/modalAdicionarFilme';
 import styles from './estilos/stylesHome';
 import { getUser, logout } from './services/authService';
+import { cadastrarFilme, listarFilmes } from './services/filmeService';
 
 export default function Home({ onLogout }) {
   const [usuario, setUsuario] = useState(null);
   const [modalVisivel, setModalVisivel] = useState(false);
-  const [filmes, setFilmes] = useState([
-    {
-      id: '1',
-      nome: 'Aventura Espacial',
-      imagem:
-        'https://i.pinimg.com/736x/37/1d/09/371d09b7cceed0256e8ad4f01b9fa9d8.jpg',
-      dataLancamento: new Date().toISOString(),
-      descricao: 'Uma aventura pelo espaço sideral.',
-    },
-    {
-      id: '2',
-      nome: 'Drama Científico',
-      imagem:
-        'https://i.pinimg.com/736x/37/1d/09/371d09b7cceed0256e8ad4f01b9fa9d8.jpg',
-      dataLancamento: new Date().toISOString(),
-      descricao: 'Um drama sobre descobertas científicas.',
-    },
-  ]);
+  const [filmes, setFilmes] = useState([]);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     const carregarUsuario = async () => {
@@ -48,6 +33,37 @@ export default function Home({ onLogout }) {
 
     carregarUsuario();
   }, []);
+
+  // Efeito para carregar a lista de filmes ao iniciar
+  useEffect(() => {
+    buscarFilmes();
+  }, []);
+
+  // Função para buscar filmes da API
+  const buscarFilmes = async () => {
+    try {
+      setCarregando(true);
+      const filmesCarregados = await listarFilmes();
+
+      // Mapear dados para garantir compatibilidade com o componente
+      const filmesFormatados = filmesCarregados.map((filme) => ({
+        id: filme._id,
+        nome: filme.nomeFilme,
+        imagem:
+          filme.imagemFilme ||
+          'https://i.pinimg.com/736x/37/1d/09/371d09b7cceed0256e8ad4f01b9fa9d8.jpg',
+        dataLancamento: filme.dataAssistir || new Date().toISOString(),
+        descricao: filme.descricao || '',
+      }));
+
+      setFilmes(filmesFormatados);
+    } catch (erro) {
+      console.error('Erro ao buscar filmes:', erro);
+      Alert.alert('Erro', 'Não foi possível carregar os filmes.');
+    } finally {
+      setCarregando(false);
+    }
+  };
 
   const fazerLogout = async () => {
     try {
@@ -66,25 +82,19 @@ export default function Home({ onLogout }) {
 
   const adicionarNovoFilme = async (novoFilme) => {
     try {
-      // TODO: Fazer uma chamada de API para salvar o filme
-      // Por enquanto vamos apenas adicionar localmente
+      // Preparar dados no formato esperado pela API
+      const dadosFilmeAPI = {
+        nomeFilme: novoFilme.nome,
+        imagemFilme: novoFilme.imagem,
+        dataAssistir: novoFilme.dataLancamento,
+        descricao: novoFilme.descricao,
+      };
 
-      // Gerar ID único usando timestamp ao invés do comprimento do array
-      const novoId = Date.now().toString();
+      // Chamar a API para cadastrar o filme
+      const filmeAdicionado = await cadastrarFilme(dadosFilmeAPI);
 
-      const novoArrayFilmes = [
-        ...filmes,
-        {
-          id: novoId,
-          ...novoFilme,
-        },
-      ];
-
-      // Atualizar o estado com o novo array de filmes
-      setFilmes(novoArrayFilmes);
-
-      // Verificar se o estado foi atualizado corretamente
-      console.log('Filme adicionado:', novoArrayFilmes);
+      // Atualizar a lista de filmes após o cadastro
+      await buscarFilmes();
 
       Alert.alert('Sucesso', 'Filme adicionado com sucesso!', [{ text: 'OK' }]);
 
@@ -167,6 +177,8 @@ export default function Home({ onLogout }) {
           contentContainerStyle={{ paddingBottom: 80 }} // Espaço para não esconder o último item atrás do botão
           style={{ flex: 1 }} // Para ocupar todo o espaço disponível
           extraData={filmes} // Força a atualização da lista quando o estado muda
+          refreshing={carregando}
+          onRefresh={buscarFilmes}
         />
       </View>
 
