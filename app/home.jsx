@@ -11,13 +11,21 @@ import {
   View,
 } from 'react-native';
 import ModalAdicionarFilme from './components/modalAdicionarFilme';
+import ModalDetalhesFilme from './components/modalDetalhesFilme';
 import styles from './estilos/stylesHome';
 import { getUser, logout } from './services/authService';
-import { cadastrarFilme, listarFilmes } from './services/filmeService';
+import {
+  atualizarFilme,
+  cadastrarFilme,
+  excluirFilme,
+  listarFilmes,
+} from './services/filmeService';
 
 export default function Home({ onLogout }) {
   const [usuario, setUsuario] = useState(null);
   const [modalVisivel, setModalVisivel] = useState(false);
+  const [modalDetalhesVisivel, setModalDetalhesVisivel] = useState(false);
+  const [filmeAtual, setFilmeAtual] = useState(null);
   const [filmes, setFilmes] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
@@ -110,10 +118,49 @@ export default function Home({ onLogout }) {
     }
   };
 
+  // Função para abrir o modal de detalhes do filme
+  const abrirDetalhesFilme = (filme) => {
+    setFilmeAtual(filme);
+    setModalDetalhesVisivel(true);
+  };
+
+  // Função para editar um filme existente
+  const editarFilme = async (id, dadosAtualizados) => {
+    try {
+      // Atualizar o filme na API
+      await atualizarFilme(id, dadosAtualizados);
+
+      // Atualizar a lista local de filmes
+      await buscarFilmes();
+
+      return true;
+    } catch (erro) {
+      console.error('Erro ao editar filme:', erro);
+      throw erro;
+    }
+  };
+
+  // Função para excluir um filme
+  const deletarFilme = async (id) => {
+    try {
+      // Excluir o filme na API
+      await excluirFilme(id);
+
+      // Atualizar a lista local de filmes
+      await buscarFilmes();
+
+      return true;
+    } catch (erro) {
+      console.error('Erro ao excluir filme:', erro);
+      throw erro;
+    }
+  };
+
   const renderizarFilme = ({ item }) => (
     <TouchableOpacity
       activeOpacity={0.9}
       key={item.id}
+      onPress={() => abrirDetalhesFilme(item)}
     >
       <ImageBackground
         source={{ uri: item.imagem }}
@@ -202,6 +249,15 @@ export default function Home({ onLogout }) {
         visivel={modalVisivel}
         aoFechar={() => setModalVisivel(false)}
         aoAdicionar={adicionarNovoFilme}
+      />
+
+      {/* Modal para exibir detalhes e editar/excluir filme */}
+      <ModalDetalhesFilme
+        visivel={modalDetalhesVisivel}
+        filme={filmeAtual}
+        aoFechar={() => setModalDetalhesVisivel(false)}
+        aoEditar={editarFilme}
+        aoDeletar={deletarFilme}
       />
     </SafeAreaView>
   );

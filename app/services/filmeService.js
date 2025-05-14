@@ -46,7 +46,15 @@ export const cadastrarFilme = async (dadosFilme) => {
  */
 export const atualizarFilme = async (id, dadosFilme) => {
   try {
-    const resposta = await api.put(`/api/filmes/${id}`, dadosFilme);
+    // Converter os dados do formato do frontend para o formato do backend
+    const dadosParaAPI = {
+      nomeFilme: dadosFilme.nome,
+      imagemFilme: dadosFilme.imagem,
+      dataAssistir: dadosFilme.dataLancamento,
+      descricao: dadosFilme.descricao,
+    };
+
+    const resposta = await api.put(`/api/filmes/${id}`, dadosParaAPI);
     return resposta.data.filme;
   } catch (erro) {
     console.error('Erro ao atualizar filme:', erro);
