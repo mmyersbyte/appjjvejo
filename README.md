@@ -1,22 +1,19 @@
 <!-- markdownlint-disable MD033 MD041 -->
+<!-- markdownlint-disable MD033 MD041 -->
 <p align="center">
-  <h1 align="center">🎬 Já Já Vejo</h1>
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=24&pause=1000&center=true&width=500&lines=🎬+Já+Já+Vejo+-+App+de+Filmes;🔥+Backend+na+unha:+HTTP+cru+Node.js;📲+Front+em+React+Native+com+Expo;🔐+Auth+com+bcrypt+e+MongoDB" alt="Typing SVG" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Node.js-18.x-green?logo=node.js&logoColor=white&style=for-the-badge" alt="Node.js">
-  <img src="https://img.shields.io/badge/React%20Native-0.72-blue?logo=react&logoColor=white&style=for-the-badge" alt="React Native">
-  <img src="https://img.shields.io/badge/Expo-SDK%2046-purple?logo=expo&logoColor=white&style=for-the-badge" alt="Expo">
-  <img src="https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb&logoColor=white&style=for-the-badge" alt="MongoDB Atlas">
-  <img src="https://img.shields.io/badge/Mongoose-6.x-red?logo=mongodb&logoColor=white&style=for-the-badge" alt="Mongoose">
-  <img src="https://img.shields.io/badge/bcrypt-5.x-blue?logo=appveyor&logoColor=white&style=for-the-badge" alt="bcrypt">
-  <img src="https://img.shields.io/badge/Axios-1.x-lightgrey?logo=axios&logoColor=white&style=for-the-badge" alt="Axios">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?logo=github&logoColor=white&style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Node.js-%2318.x-%23339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Vanilla_HTTP-%23000000?style=for-the-badge&logo=node.js&logoColor=white" alt="HTTP puro"/>
+  <img src="https://img.shields.io/badge/React_Native-%23072E54?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Native"/>
+  <img src="https://img.shields.io/badge/Expo-%23000020?style=for-the-badge&logo=expo&logoColor=white" alt="Expo"/>
+  <img src="https://img.shields.io/badge/MongoDB_Atlas-%2347A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB Atlas"/>
+  <img src="https://img.shields.io/badge/bcrypt-%2340AEF0?style=for-the-badge&logo=appveyor&logoColor=white" alt="bcrypt"/>
+  <img src="https://img.shields.io/badge/Axios-%230075C2?style=for-the-badge&logo=axios&logoColor=white" alt="Axios"/>
 </p>
 <!-- markdownlint-enable MD033 MD041 -->
-
-
-
 
 
 # Welcome to your Expo app 👋
