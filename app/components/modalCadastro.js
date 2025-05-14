@@ -14,9 +14,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import estilos from '../estilos/styles'; // Importando as cores globais
+import estilos from '../estilos/styles';
 import { registrar } from '../services/authService'; // Importando o serviço de autenticação
-import estilosCadastro from './estilosComponentes/cadastro'; // Importando os estilos específicos do cadastro
+import estilosCadastro from './estilosComponentes/cadastro';
 
 /**
  * Modal de Cadastro

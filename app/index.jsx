@@ -1,5 +1,3 @@
-'use client';
-
 import { FontAwesome } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { useEffect, useState } from 'react';
@@ -8,12 +6,7 @@ import ModalCadastro from './components/modalCadastro';
 import ModalLogin from './components/modalLogin';
 import estilos from './estilos/styles';
 import Home from './home';
-import {
-  getUser,
-  initAuth,
-  isAuthenticated,
-  logout,
-} from './services/authService';
+import { getUser, initAuth, isAuthenticated } from './services/authService';
 
 export default function Index() {
   // Estados para controlar a visibilidade dos modais
@@ -68,30 +61,25 @@ export default function Index() {
     setModalCadastroVisivel(false);
   };
 
+  // Função pra tratar o logout
+  const handleLogout = async () => {
+    setUsuario(null);
+    setAutenticado(false);
+  };
+
   // Funções de callback para login e cadastro
   const aoLogar = (usuarioLogado) => {
     setUsuario(usuarioLogado);
     setAutenticado(true);
     console.log('Usuário logado:', usuarioLogado);
-    // Redirecionar para a tela principal ou atualizar a interface
+    // Vai pra tela principal
   };
 
   const aoCadastrar = (usuarioCadastrado) => {
     setUsuario(usuarioCadastrado);
     setAutenticado(true);
     console.log('Usuário cadastrado:', usuarioCadastrado);
-    // Redirecionar para a tela principal ou atualizar a interface
-  };
-
-  // Função para fazer logout
-  const fazerLogout = async () => {
-    try {
-      await logout();
-      setUsuario(null);
-      setAutenticado(false);
-    } catch (erro) {
-      console.error('Erro ao fazer logout:', erro);
-    }
+    // Vai pra tela principal depois de cadastrar
   };
 
   // Renderização condicional baseada no estado de autenticação
@@ -111,7 +99,7 @@ export default function Index() {
 
   // Se o usuário estiver autenticado, redireciona para a Home
   if (autenticado && usuario) {
-    return <Home />;
+    return <Home onLogout={handleLogout} />;
   }
 
   // Se não estiver autenticado, mostra a tela de login/cadastro

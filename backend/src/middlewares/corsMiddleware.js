@@ -34,7 +34,6 @@ export function configurarCORS(res) {
  */
 export function lidarComPreflightCORS(req, res) {
   if (req.method === 'OPTIONS') {
-    // Responde com status 204 (No Content) para requisições preflight
     res.writeHead(204);
     res.end();
     return true;
