@@ -44,10 +44,9 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   imagemPerfil: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 2,
+    width: 100,
+    height: 100,
+    borderRadius: 60,
     borderColor: CORES.corPrimaria,
   },
   separador: {

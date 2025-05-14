@@ -182,9 +182,9 @@ export default function Home({ onLogout }) {
       {/* Header */}
       <View style={styles.cabecalho}>
         <View style={styles.infoUsuario}>
-          <Text style={styles.saudacao}>Olá {usuario?.nome || 'Usuário'}</Text>
+          <Text style={styles.saudacao}>Olá, {usuario?.nome || 'Usuário'}</Text>
           <Text style={styles.biografia}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae
+            Adicione, edite ou exclua filmes da sua lista
           </Text>
         </View>
         <View style={styles.perfilContainer}>
@@ -229,7 +229,6 @@ export default function Home({ onLogout }) {
         />
       </View>
 
-      {/* BOTÃO PARA ADICIONAR NOVO FILME */}
       <TouchableOpacity
         style={styles.botaoAddFilme}
         activeOpacity={0.7}
@@ -244,7 +243,6 @@ export default function Home({ onLogout }) {
         <Text style={styles.textoAddFilme}>Novo Filme</Text>
       </TouchableOpacity>
 
-      {/* Modal para adicionar novo filme */}
       <ModalAdicionarFilme
         visivel={modalVisivel}
         aoFechar={() => setModalVisivel(false)}

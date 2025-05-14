@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   tituloFilme: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#F6F6F6',
     marginBottom: 10,
   },
   dataContainer: {
@@ -701,12 +701,12 @@ const styles = StyleSheet.create({
   descricaoLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#555',
+    color: '#F6F6F6',
     marginBottom: 5,
   },
   descricaoFilme: {
     fontSize: 14,
-    color: '#666',
+    color: '#F6F6F6',
     lineHeight: 20,
   },
   botoesAcaoContainer: {
