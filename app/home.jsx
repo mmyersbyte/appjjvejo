@@ -83,7 +83,7 @@ export default function Home({ onLogout }) {
         alert('Função de logout não configurada corretamente');
       }
     } catch (erro) {
-      console.log('Ops! Erro ao fazer logout:', erro);
+      console.log('Erro ao fazer logout:', erro);
       alert('Não consegui te deslogar. Tenta de novo!');
     }
   };
@@ -195,18 +195,16 @@ export default function Home({ onLogout }) {
             style={styles.imagemPerfil}
           />
 
-          {/* Botão de logout abaixo da foto de perfil */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.botaoLogout}
             onPress={fazerLogout}
           >
             <FontAwesome
               name='sign-out'
-              size={16}
+              size={23}
               color='#EEEEEE'
             />
-            <Text style={styles.textoLogout}>Sair</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 

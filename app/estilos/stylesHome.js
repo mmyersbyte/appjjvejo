@@ -11,10 +11,8 @@ const CORES = {
   textoSecundario: '#CCCCCC',
 };
 
-// Export the color palette for use in other files if needed
 export { CORES };
 
-// Create and export the styles
 const styles = StyleSheet.create({
   contenedor: {
     flex: 1,
@@ -26,27 +24,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 8, // reduzido para colocar saudação mais no topo
   },
   infoUsuario: {
     flex: 1,
     marginRight: 16,
+    justifyContent: 'flex-start', // garante saudação no topo
   },
   saudacao: {
     fontSize: 28,
     color: CORES.corPrimaria,
     fontWeight: 'bold',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   biografia: {
     fontSize: 14,
     color: CORES.textoSecundario,
     lineHeight: 20,
   },
+  perfilContainer: {
+    flexDirection: 'row', // foto e botão lado a lado
+    alignItems: 'center',
+  },
   imagemPerfil: {
-    width: 100,
-    height: 100,
-    borderRadius: 60,
+    width: 90,
+    height: 90,
+    borderRadius: 80,
+    borderWidth: 1,
     borderColor: CORES.corPrimaria,
   },
   separador: {
@@ -86,9 +90,6 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
-  perfilContainer: {
-    alignItems: 'center',
-  },
   botaoLogout: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 20,
-    marginTop: 8,
+    marginLeft: 10, // espaçamento à esquerda da foto
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     left: 24,
     right: 24,
     height: 56,
-    borderRadius: 12,
+    borderRadius: 50,
     backgroundColor: CORES.corPrimaria,
     flexDirection: 'row',
     alignItems: 'center',

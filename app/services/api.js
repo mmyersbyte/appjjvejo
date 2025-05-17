@@ -11,7 +11,7 @@ import axios from 'axios';
 // Cria uma instância do Axios com configurações personalizadas
 const api = axios.create({
   // URL base da API - ajuste para o endereço do seu servidor
-  baseURL: 'http://192.168.1.17:8022', // P/ testes locais, uso meu ip local
+  baseURL: 'http://192.168.1.17:8022' || 'https://appjjvejo.onrender.com', // P/ testes locais, uso meu ip local
   // em produção eh o ip render
   // Timeout para requisições
   timeout: 10000,

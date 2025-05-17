@@ -3,6 +3,10 @@
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=24&pause=1000&center=true&width=500&lines=🎬+Já+Já+Vejo+-+App+de+Filmes;🔥+Backend+na+unha:+HTTP+cru+Node.js;📲+Front+em+React+Native+com+Expo;🔐+Auth+com+bcrypt+e+MongoDB" alt="Typing SVG" />
 </p>
+<img src="assets/index.jpg.jpg">
+<img src="assets/home.jpg">
+
+<img src="assets/modal.jpg.jpg">
 
 <p align="center">
   <img src="https://img.shields.io/badge/Node.js-%2318.x-%23339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/>
@@ -14,7 +18,6 @@
   <img src="https://img.shields.io/badge/Axios-%230075C2?style=for-the-badge&logo=axios&logoColor=white" alt="Axios"/>
 </p>
 <!-- markdownlint-enable MD033 MD041 -->
-
 
 # Welcome to your Expo app 👋
 
@@ -66,4 +69,5 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
 # appjajavejo
