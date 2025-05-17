@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import http from 'node:http';
 import conectaNaDataBase from './config/dbConnect.js'; // Função para conectar ao MongoDB
 import {
@@ -6,6 +6,7 @@ import {
   lidarComPreflightCORS,
 } from './middlewares/corsMiddleware.js'; // Middleware de CORS
 import processarRotas from './routes/index.js'; // Sistema de roteamento
+dotenv.config();
 
 const conexao = await conectaNaDataBase();
 

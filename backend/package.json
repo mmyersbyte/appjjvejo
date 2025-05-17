@@ -2,9 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "start": "node --watch src/server.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -13,10 +11,11 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^16.5.0",
+    "firebase-admin": "^13.4.0",
     "jsonwebtoken": "^9.0.2",
     "mongo": "^0.1.0",
     "mongodb": "^6.16.0",
-    "mongoose": "^8.14.3",
-    "moongose": "^1.0.0"
+    "mongoose": "^8.15.0",
+    "passport": "^0.7.0"
   }
 }
