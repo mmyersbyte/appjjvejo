@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import http from 'node:http';
+
 import conectaNaDataBase from './config/dbConnect.js'; // Função para conectar ao MongoDB
 import {
   configurarCORS,
@@ -45,6 +46,7 @@ server.addListener('request', (request, response) => {
     );
   }
 });
+// console.log();
 
 const PORT = process.env.PORT || 8022;
 server.listen(PORT, () => {
